@@ -8,19 +8,48 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.a24_12_sparks.model.MessageBean;
 import org.example.a24_12_sparks.model.StudentBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 public class MyRestController {
 
+
     //http://localhost:8080/test
     @GetMapping("/test")
     public String testMethode() {
+
         System.out.println("/test");
 
         return "<b>helloWorld</b>";
     }
+
+
+    //http://localhost:8080/testPublic
+    @GetMapping("/testPublic")
+    public String testPublic() {
+        System.out.println("/testPublic");
+        return "Hello public";
+    }
+
+    //http://localhost:8080/testPrivate
+    @GetMapping("/testPrivate")
+    public String testPrivate() {
+        System.out.println("/testPrivate");
+        return "Hello private";
+    }
+
+
+    //http://localhost:8080/testPrivateAdmin
+    @GetMapping("/testPrivateAdmin")
+    public String testPrivateAdmin() {
+        System.out.println("/testPrivateAdmin");
+        return "Hello private Admin";
+    }
+
+
 
     //http://localhost:8080/receiveStudent
 //Json Attendu : {"name": "toto", "note": 12}

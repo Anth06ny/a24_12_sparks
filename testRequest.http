@@ -1,8 +1,56 @@
 ###
-POST http://localhost:8080/receiveStudent
+POST http://localhost:8080/tchat/saveMessage
 Content-Type: application/json
+Authorization: Basic aaa bbb
 
 {
-  "name": "",
-  "note": 0
+  "message": "TestH2",
+  "pseudo": "toto"
 }
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Answer not expected");
+    });
+%}
+
+###
+POST http://localhost:8080/tchat/saveMessage
+Content-Type: application/json
+Authorization: Basic aaa bbb
+
+{
+  "message": "hello",
+  "pseudo": "Bob"
+}
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Answer not expected");
+    });
+%}
+
+###
+POST http://localhost:8080/tchat/saveMessage
+Content-Type: application/json
+Authorization: Basic aaa bbb
+
+{
+  "message": "Salut",
+  "pseudo": "Bobby"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Answer not expected");
+    });
+%}
+
+###
+GET http://localhost:8081/tchat/allMessages
+Authorization: Basic aaa bbb
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Answer not expected");
+    });
+%}

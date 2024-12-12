@@ -1,15 +1,15 @@
 package org.example.a24_12_sparks.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.a24_12_sparks.model.MessageBean;
+import org.example.a24_12_sparks.services.MessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -17,7 +17,8 @@ import java.util.ArrayList;
 @Tag(name = "Tchat", description = "API pour gérer les messages d'un tchat")
 public class TchatRestController {
 
-    private ArrayList<MessageBean> list = new ArrayList<>();
+    @Autowired
+    private MessageService messageService;
 
     @Operation(
             summary = "Enregistrer un message",
@@ -32,33 +33,28 @@ public class TchatRestController {
     @PostMapping("/saveMessage")
     public void saveMessage(@RequestBody MessageBean message) {
         System.out.println("/saveMessage : " + message.getMessage() + " : " + message.getPseudo());
-        list.add(message);
+        messageService.addMessage(message);
     }
 
-    @Operation(
-            summary = "Obtenir les derniers messages",
-            description = "Récupère les 10 derniers messages enregistrés dans le tchat"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Liste des messages retournée avec succès",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = MessageBean.class)
-                    )
-            )
-    })
+    //http://localhost:8080/tchat/allMessages
     @GetMapping("/allMessages")
-    public ArrayList<MessageBean> allMessages() {
+    public List<MessageBean> allMessages() {
         System.out.println("/allMessages");
 
-        //pour ne retourner que les 10 derniers
-        ArrayList<MessageBean> toReturn = new ArrayList<>();
-        for (int i = Math.max(list.size() - 10, 0); i < list.size(); i++) {
-            toReturn.add(list.get(i));
+        return messageService.getAll();
+    }
+
+    //http://localhost:8080/tchat/testTransactional
+    @GetMapping("/testTransactional")
+    public List<MessageBean> Transactional() {
+        System.out.println("/Transactional");
+
+        try {
+            messageService.addMultipleMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return toReturn;
+        return messageService.getAll();
     }
 }
